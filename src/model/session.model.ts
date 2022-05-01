@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
-import config from "config";
+
 
 import ISessionDocument from "../interfaces/session.interface";
 
