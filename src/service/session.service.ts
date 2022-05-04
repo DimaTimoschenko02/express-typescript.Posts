@@ -1,7 +1,11 @@
+import config from "config";
+import { LeanDocument } from "mongoose";
+import { get } from "lodash";
 import IUserDocument from "../interfaces/user.interface";
 import Session from "../model/session.model";
 import ISessionDocument from "../interfaces/session.interface";
-import { LeanDocument, FilterQuery, UpdateQuery } from "mongoose";
+import { decode , sign } from '../utils/jwt.utils'
+import { findUser } from "./user.service";
 
 
 export async function createSession(userId: string, userAgent: string) {
@@ -11,17 +15,40 @@ export async function createSession(userId: string, userAgent: string) {
 }
 
 export function createAccessToken({
-    user,
-    session,
-}:{
-    user:
-        | Omit<IUserDocument , 'password'>
-        | LeanDocument<Omit<IUserDocument , 'password'>>;
-    session:
-        | Omit<ISessionDocument , 'password'>
-        | LeanDocument<Omit<IUserDocument , 'password'>>;
+  user,
+  session,
+}: {
+  user:
+    | Omit<IUserDocument, "password">
+    | LeanDocument<Omit<IUserDocument, "password">>;
+  session:
+    | Omit<ISessionDocument, "password">
+    | LeanDocument<Omit<ISessionDocument, "password">>;
+}) {
+  const timeToLive = config.get("accessTokenTtl") as string;
+  const accessToken = sign(
+    { ...user, session: session._id },
+    { expiresIn: timeToLive }
+  );
 
-}){
-    return null
+  return accessToken;
 }
 
+export async function reIssueAccessToken({
+  refreshToken,
+}: {
+  refreshToken: string;
+}){
+    const { decoded } = decode(refreshToken)
+    if(!decode || !get(decoded , '_id')) return false
+
+    const session = await Session.findById(get(decoded , "_id"))
+    if(!session || !session.valid) return false
+
+    const user = await findUser({id: session.user})
+
+    if(!user) return false;
+
+    const newAccesToken = await createAccessToken({user , session})
+    return newAccesToken
+}
