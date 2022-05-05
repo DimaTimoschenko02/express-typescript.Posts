@@ -1,9 +1,9 @@
-import User from "../model/user.model";
-import IUserDocument from "../interfaces/user.interface";
-import ISessionDocument from "../interfaces/session.interface";
+import User , { IUserDocument } from "../model/user.model";
+
+
 import { DocumentDefinition, FilterQuery, UpdateQuery } from "mongoose";
 import { omit } from 'lodash'
-import Session from "../model/session.model";
+import Session , { ISessionDocument } from "../model/session.model";
 
 
 export async function createUser(
@@ -30,14 +30,14 @@ export async function ValidatePassword({
 }) {
   const user = await User.findOne({ email });
   if (!user) {
-    console.log('nouser')
+    //console.log('nouser')
     return false;
   }
 
   const isValid = await user.comparePassword(password)
 
   if(!isValid){
-    console.log('invalid')
+    //console.log('invalid')
     return false
   }
 

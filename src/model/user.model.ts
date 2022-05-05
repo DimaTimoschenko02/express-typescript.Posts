@@ -1,7 +1,15 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import config from "config";
-import IUserDocument from "../interfaces/user.interface";
+
+export interface IUserDocument extends mongoose.Document{
+    email:string
+    password:string
+    name:string
+    createdAt:Date
+    updatedAt:Date
+    comparePassword(candidatePassword: string): Promise<boolean>
+}
+
 const UserSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -21,23 +29,20 @@ const UserSchema = new mongoose.Schema({
   }
 );
 UserSchema.pre('save' , async function(next:mongoose.HookNextFunction){
-    console.log('in save func')
     const user = this as IUserDocument
     if(!user.isModified('password')){
         return next()
     }
     const hashPassword = bcrypt.hashSync(user.password , 5)
-    console.log('password' , hashPassword)
+
     user.password = hashPassword
-    console.log('user' , user)    
-    // await user.save()
-    // console.log('user' , user)
+   
     return next()
 })
 
 UserSchema.methods.comparePassword = async function(candidatePassword: string){
     const user = this as IUserDocument
-    console.log(user)
+    //console.log(user)
     return bcrypt.compare(candidatePassword, user.password).catch((e) => false)
 
 }

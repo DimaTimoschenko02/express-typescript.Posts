@@ -1,7 +1,16 @@
 import mongoose from "mongoose";
 
+import { IUserDocument } from './user.model'
 
-import ISessionDocument from "../interfaces/session.interface";
+export interface ISessionDocument extends mongoose.Document{
+    user:IUserDocument["_id"]
+    valid:boolean
+    userAgent:string
+    createdAt:Date
+    updatedAt:Date
+}
+
+
 
 const SessionSchema = new mongoose.Schema(
   {
@@ -11,6 +20,7 @@ const SessionSchema = new mongoose.Schema(
     },
     valid: {
       type: Boolean,
+      //default: false
     },
     userAgent: {
       type: String,

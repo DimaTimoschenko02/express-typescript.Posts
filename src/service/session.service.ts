@@ -1,9 +1,8 @@
 import config from "config";
-import { LeanDocument } from "mongoose";
+import { LeanDocument , FilterQuery } from "mongoose";
 import { get } from "lodash";
-import IUserDocument from "../interfaces/user.interface";
-import Session from "../model/session.model";
-import ISessionDocument from "../interfaces/session.interface";
+import { IUserDocument } from "../model/user.model";
+import Session , { ISessionDocument } from "../model/session.model";
 import { decode , sign } from '../utils/jwt.utils'
 import { findUser } from "./user.service";
 
@@ -51,4 +50,8 @@ export async function reIssueAccessToken({
 
     const newAccesToken = await createAccessToken({user , session})
     return newAccesToken
+}
+
+export async function getSessions(query:FilterQuery<ISessionDocument>){
+  return Session.find(query).lean()
 }
