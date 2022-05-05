@@ -1,7 +1,7 @@
 import express from "express";
 import config from "config";
 import connect from "./db/connect";
-import router from "./routes/routes";
+import router from "./routes";
 import { deserializeUser } from "./middlware";
 
 const port = config.get("port") as number;
