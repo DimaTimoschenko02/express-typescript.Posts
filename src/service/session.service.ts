@@ -40,18 +40,19 @@ export async function reIssueAccessToken({
 }) : Promise<string | false>{
     const { decoded } = decode(refreshToken)
     if(!decode || !get(decoded , '_id')) return false
-
+    
     const session = await Session.findById(get(decoded , "_id"))
-    if(!session || !session.valid) return false
-
-    const user = await findUser({id: session.user})
+    //|| !session.valid
+    if(!session ) return false
+    
+    const user = await findUser({_id: session.user})
 
     if(!user) return false;
-
+    
     const newAccesToken = await createAccessToken({user , session})
     return newAccesToken
 }
 
 export async function getSessions(query:FilterQuery<ISessionDocument>){
-  return Session.find(query).lean()
+  return await Session.find(query).lean()
 }

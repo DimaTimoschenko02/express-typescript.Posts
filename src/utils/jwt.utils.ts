@@ -11,14 +11,12 @@ export function sign(object:Object , options?: jwt.SignOptions | undefined ){
 export function decode(token: string) {
     try{
         const decoded = jwt.verify(token, secretKey)
-        console.log(decoded)
   return {
-      decoded,
+      decoded: decoded,
       valid: true,
       expired : false
     }
     }catch(error:any){
-        console.log({error})
         return {
             decoded: null,
             valid: false,

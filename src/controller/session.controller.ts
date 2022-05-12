@@ -4,6 +4,7 @@ import { createSession, createAccessToken } from "../service/session.service";
 import { sign } from '../utils/jwt.utils'
 import { updateSession, ValidatePassword } from '../service/user.service'
 import {getSessions} from '../service/session.service'
+import Session from '../model/session.model'
 import config from "config";
 
 const timeToLive = config.get("refreshTokenTtl") as string;
@@ -36,10 +37,10 @@ export async function destroySession(req: Request, res: Response) {
 }
 
 export async function getUserSessions(req: Request , res: Response){
-  const userId = get(req, "user._id")
-  const sessions = await getSessions({userId , valid: true})
-
-  return sessions
+  // const userId = get(req, "user._id")
+  // const sessions = await getSessions({userId})
+  const sessions = await Session.find()
+  return res.json({sessions})
 }
 
 

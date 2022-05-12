@@ -20,3 +20,5 @@ export async function getAllUsers(req:Request , res:Response){
     }
 }
 
+
+

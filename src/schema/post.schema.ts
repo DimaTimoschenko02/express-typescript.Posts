@@ -18,3 +18,15 @@ export const updatePostSchema = object({
     }),
     ...payload
 })
+
+// export const deletePostSchema = object({
+//     params: object({
+//         postId: string().required()
+//     })
+// })
+
+// export const getPostSchhemaById = object({
+//     params: object({
+//         postId: string().required()
+//     })
+// })
