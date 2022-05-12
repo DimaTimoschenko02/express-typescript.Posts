@@ -37,7 +37,7 @@ export async function reIssueAccessToken({
   refreshToken,
 }: {
   refreshToken: string;
-}){
+}) : Promise<string | false>{
     const { decoded } = decode(refreshToken)
     if(!decode || !get(decoded , '_id')) return false
 

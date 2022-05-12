@@ -3,13 +3,14 @@ import { Request, Response, NextFunction } from "express";
 import { decode } from '../utils/jwt.utils'
 import { IAuthInterface } from "../interfaces/auth.interface";
 import { reIssueAccessToken } from '../service/session.service';
+import { JwtPayload } from "jsonwebtoken";
 
 const deserialize = async (req: Request, res: Response, next: NextFunction) => {
   const accessToken = get(req, "headers.authorization", "").replace(
     "/^Bearers/",
     ""
   );
-  const refreshToken = get(req, "headers. ") as string
+  const refreshToken = get(req, "headers.x-refresh") as string
 
   if (!accessToken) return next();
 

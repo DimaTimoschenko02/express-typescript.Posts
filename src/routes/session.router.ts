@@ -5,8 +5,6 @@ import { createSessionSchema } from '../schema/session.schema';
 
 const router = Router();
 
-
-
 router.post("/session", validateRequest(createSessionSchema), createSessionHandler)
 router.delete("/session", requireUser, destroySession)
 
